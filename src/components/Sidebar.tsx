@@ -20,20 +20,27 @@ export function Sidebar({
   isOpen,
   setSidebarOpen
 }: SidebarProps) {
-  const handleNewChat = () => {
+  const handleNewChat = (e: React.MouseEvent | React.TouchEvent) => {
+    e.preventDefault();
     onNewConversation();
     setSidebarOpen(false);
   };
 
-  const handleSelectConversation = (id: string) => {
+  const handleSelectConversation = (id: string, e: React.MouseEvent | React.TouchEvent) => {
+    e.preventDefault();
     onSelectConversation(id);
     setSidebarOpen(false);
   };
 
+  const handleDeleteConversation = (id: string, e: React.MouseEvent | React.TouchEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    onDeleteConversation(id);
+  };
+
   return (
     <div
-      className={`
-        fixed md:relative h-screen flex flex-col overflow-hidden z-50 transition-all duration-500 ease-in-out
+      className={`fixed md:relative h-screen flex flex-col overflow-hidden z-50 transition-all duration-500 ease-in-out
         ${isOpen ? 'w-full md:w-80 lg:w-96' : 'w-0'} 
         bg-gradient-to-b from-gray-900/90 to-gray-800/80 border-r border-gray-700
       `}
@@ -51,6 +58,7 @@ export function Sidebar({
       {/* New Chat Button */}
       <button
         onClick={handleNewChat}
+        onTouchStart={handleNewChat}  // Added touch event handler
         className="flex items-center gap-3 mx-4 my-2 p-3 rounded-lg border border-gray-700 hover:bg-gray-800 text-white text-lg font-semibold transition-all duration-300 ease-in-out shadow-md transform hover:scale-105"
       >
         <Plus size={20} />
@@ -66,17 +74,16 @@ export function Sidebar({
               flex items-center justify-between p-4 cursor-pointer rounded-lg transition-all duration-300 ease-in-out
               hover:bg-gray-700 ${activeConversation === conv.id ? 'bg-gray-600' : ''}
             `}
-            onClick={() => handleSelectConversation(conv.id)}
+            onClick={(e) => handleSelectConversation(conv.id, e)}  // Modified to handle both click and touch
+            onTouchStart={(e) => handleSelectConversation(conv.id, e)}  // Added touch event handler
           >
             <div className="flex items-center gap-3 text-gray-300 flex-1 min-w-0">
               <MessageCircle size={20} />
               <span className="truncate text-base">{conv.title}</span>
             </div>
             <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onDeleteConversation(conv.id);
-              }}
+              onClick={(e) => handleDeleteConversation(conv.id, e)}  // Modified to handle both click and touch
+              onTouchStart={(e) => handleDeleteConversation(conv.id, e)}  // Added touch event handler
               className="text-gray-400 hover:text-red-500 p-2 rounded-lg transition-all duration-300 ease-in-out"
             >
               <Trash2 size={20} />
