@@ -264,7 +264,7 @@ function App() {
 
 const BubbleText = () => {
   return (
-    <h2 className="text-center text-5xl font-thin text-indigo-300">
+    <h2 className="text-center text-4xl md:text-5xl lg:text-6xl font-thin text-indigo-300">
       {"What can I help with ?"
         .split("")
         .map((char, idx) => (

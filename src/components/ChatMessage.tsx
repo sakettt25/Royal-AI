@@ -17,8 +17,7 @@ export function ChatMessage({ message, isTyping = false }: ChatMessageProps) {
         flex gap-4 p-6 mb-6 rounded-xl shadow-md border transition-all duration-300
         ${isAssistant 
           ? 'bg-gradient-to-br from-gray-800/70 to-gray-900/70 border-indigo-500/20' 
-          : 'bg-gray-800/50 border-green-500/10'}
-      `}
+          : 'bg-gray-800/50 border-green-500/10'}`}
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 10 }}
@@ -42,12 +41,8 @@ export function ChatMessage({ message, isTyping = false }: ChatMessageProps) {
           </div>
         )}
 
-        {/* Typing Animation */}
-        {isTyping && isAssistant ? (
-          <div className="text-gray-400 font-mono text-sm animate-pulse">
-            Royal AI is typing<span className="animate-typing">...</span>
-          </div>
-        ) : message.isImage ? (
+        {/* Image or Message Content */}
+        {message.isImage ? (
           <motion.img
             src={`data:image/png;base64,${message.content}`}
             alt="Generated image"

@@ -59,119 +59,120 @@ export function ChatBox({ onSubmit }: ChatBoxProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-2 p-4 rounded-xl bg-transparent">
-      <div className="flex items-start gap-2">
-        {/* Dropdown */}
-        <div className="relative w-36">
-  <select
-    value={selectedModel}
-    onChange={(e) => setSelectedModel(e.target.value)}
-    className="
-      w-full h-10 px-3 pr-8 text-sm text-white rounded appearance-none
-      bg-[rgba(42,42,64,0.4)] backdrop-blur-md border border-[#444]
-      shadow-[inset_4px_4px_10px_#1a1a2a,inset_-4px_-4px_10px_#262640]
-      hover:shadow-[inset_-2px_-2px_6px_rgba(53,53,83,0.6),inset_2px_2px_6px_rgba(26,26,42,0.6)]
-      focus:outline-none focus:ring-2 focus:ring-white transition-all
-    "
-  >
-    {Object.entries(REAL_NAME_MAP).map(([model]) => (
-      <option key={model} value={model} className="bg-[#2a2a40] text-white">
-        {model}
-      </option>
-    ))}
-  </select>
-
-  {/* Chevron Icon */}
-  <svg
-    className="pointer-events-none absolute top-1/2 right-3 transform -translate-y-1/2 text-white"
-    xmlns="http://www.w3.org/2000/svg"
-    width="18"
-    height="18"
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke="currentColor"
-    strokeWidth="2"
-  >
-    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-  </svg>
-</div>
-
-
-
-        {/* Textarea */}
-        <textarea
-          ref={textareaRef}
-          value={prompt}
-          onChange={(e) => setPrompt(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-              e.preventDefault();
-              handleSubmit(e as unknown as React.FormEvent);
-            }
-          }}
-          placeholder="Type a message..."
-          rows={1}
+    <form onSubmit={handleSubmit} className="flex flex-col gap-2 p-4 rounded-xl bg-transparent md:flex-row md:items-center md:gap-4">
+      {/* Model Selector */}
+      <div className="relative w-full md:w-auto">
+        <select
+          value={selectedModel}
+          onChange={(e) => setSelectedModel(e.target.value)}
           className="
-            flex-1 max-h-[120px] min-h-[40px] px-3 py-2 text-white text-sm resize-none
-            bg-[rgba(42,42,64,0.4)] backdrop-blur-md border border-[#444] rounded
+            w-full md:w-36 h-10 px-3 pr-8 text-sm text-white rounded appearance-none
+            bg-[rgba(42,42,64,0.4)] backdrop-blur-md border border-[#444]
             shadow-[inset_4px_4px_10px_#1a1a2a,inset_-4px_-4px_10px_#262640]
-            transition
+            hover:shadow-[inset_-2px_-2px_6px_rgba(53,53,83,0.6),inset_2px_2px_6px_rgba(26,26,42,0.6)]
+            focus:outline-none focus:ring-2 focus:ring-white transition-all
           "
-        />
+        >
+          {Object.entries(REAL_NAME_MAP).map(([model]) => (
+            <option key={model} value={model} className="bg-[#2a2a40] text-white">
+              {model}
+            </option>
+          ))}
+        </select>
+        
+        {/* Dropdown Chevron Icon */}
+        <svg
+          className="pointer-events-none absolute top-1/2 right-3 transform -translate-y-1/2 text-white"
+          xmlns="http://www.w3.org/2000/svg"
+          width="18"
+          height="18"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          strokeWidth="2"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+        </svg>
+      </div>
 
-        {/* File Upload Buttons */}
-        {!IMAGE_GENERATION_MODELS.includes(selectedModel) && (
-          <>
-            {VISION_MODELS.includes(selectedModel) && (
+      {/* Textarea */}
+      <textarea
+        ref={textareaRef}
+        value={prompt}
+        onChange={(e) => setPrompt(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            handleSubmit(e as unknown as React.FormEvent);
+          }
+        }}
+        placeholder="Type a message..."
+        rows={1}
+        className="
+          flex-1 max-h-[120px] min-h-[40px] px-3 py-2 text-white text-sm resize-none
+          bg-[rgba(42,42,64,0.4)] backdrop-blur-md border border-[#444] rounded
+          shadow-[inset_4px_4px_10px_#1a1a2a,inset_-4px_-4px_10px_#262640]
+          transition
+        "
+      />
+
+      {/* File Upload and Send Button Section */}
+      <div className="flex w-full md:w-auto items-center justify-between gap-2 mt-2 sm:mt-0">
+        {/* Left: Image and File Upload Buttons */}
+        <div className="flex gap-2">
+          {!IMAGE_GENERATION_MODELS.includes(selectedModel) && (
+            <>
+              {VISION_MODELS.includes(selectedModel) && (
+                <input
+                  type="file"
+                  ref={imageInputRef}
+                  onChange={handleImageChange}
+                  accept="image/*"
+                  className="hidden"
+                />
+              )}
+              <button
+                type="button"
+                onClick={() => imageInputRef.current?.click()}
+                title="Attach image"
+                className="
+                  h-10 w-10 flex items-center justify-center text-white rounded
+                  bg-[rgba(42,42,64,0.4)] backdrop-blur-md
+                  shadow-[-5px_-5px_10px_rgba(53,53,83,0.6),5px_5px_10px_rgba(26,26,42,0.6)]
+                  hover:shadow-[inset_-2px_-2px_5px_rgba(53,53,83,0.7),inset_2px_2px_4px_rgba(26,26,42,0.7)]
+                  hover:text-violet-400 transition-all
+                "
+              >
+                <Image size={18} />
+              </button>
+
               <input
                 type="file"
-                ref={imageInputRef}
-                onChange={handleImageChange}
-                accept="image/*"
+                ref={fileInputRef}
+                onChange={handleFilesChange}
+                multiple
+                accept=".pdf,.png,.jpg,.txt"
                 className="hidden"
               />
-            )}
-            <button
-              type="button"
-              onClick={() => imageInputRef.current?.click()}
-              title="Attach image"
-              className="
-                h-10 w-10 flex items-center justify-center text-white rounded
-                bg-[rgba(42,42,64,0.4)] backdrop-blur-md
-                shadow-[-5px_-5px_10px_rgba(53,53,83,0.6),5px_5px_10px_rgba(26,26,42,0.6)]
-                hover:shadow-[inset_-2px_-2px_5px_rgba(53,53,83,0.7),inset_2px_2px_4px_rgba(26,26,42,0.7)]
-                hover:text-violet-400 transition-all
-              "
-            >
-              <Image size={18} />
-            </button>
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                title="Attach file"
+                className="
+                  h-10 w-10 flex items-center justify-center text-white rounded
+                  bg-[rgba(42,42,64,0.4)] backdrop-blur-md
+                  shadow-[-5px_-5px_10px_rgba(53,53,83,0.6),5px_5px_10px_rgba(26,26,42,0.6)]
+                  hover:shadow-[inset_-2px_-2px_5px_rgba(53,53,83,0.7),inset_2px_2px_4px_rgba(26,26,42,0.7)]
+                  hover:text-violet-400 transition-all
+                "
+              >
+                <Paperclip size={18} />
+              </button>
+            </>
+          )}
+        </div>
 
-            <input
-              type="file"
-              ref={fileInputRef}
-              onChange={handleFilesChange}
-              multiple
-              accept=".pdf,.png,.jpg,.txt"
-              className="hidden"
-            />
-            <button
-              type="button"
-              onClick={() => fileInputRef.current?.click()}
-              title="Attach file"
-              className="
-                h-10 w-10 flex items-center justify-center text-white rounded
-                bg-[rgba(42,42,64,0.4)] backdrop-blur-md
-                shadow-[-5px_-5px_10px_rgba(53,53,83,0.6),5px_5px_10px_rgba(26,26,42,0.6)]
-                hover:shadow-[inset_-2px_-2px_5px_rgba(53,53,83,0.7),inset_2px_2px_4px_rgba(26,26,42,0.7)]
-                hover:text-violet-400 transition-all
-              "
-            >
-              <Paperclip size={18} />
-            </button>
-          </>
-        )}
-
-        {/* Neumorphic Send Button */}
+        {/* Right: Send Button */}
         <NeumorphismButton />
       </div>
 
@@ -208,7 +209,7 @@ export function ChatBox({ onSubmit }: ChatBoxProps) {
   );
 }
 
-// Reusable Neumorphism Glass Button
+// Neumorphism Send Button
 const NeumorphismButton = () => {
   return (
     <button
